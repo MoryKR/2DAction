@@ -13,12 +13,15 @@ public class Player : MonoBehaviour
     public int Level; // 플레이어 레벨
     public float CurrentEXP; //현재 경험치
     public float EXP; //Max Exp
+    public float Credit; // 플레이어 자금
 
     public Text Name;
     public Slider PlayerHPUI;
     public Animator Anim;
     public Text LevelUI;
     public Slider PlayerEXPUI;
+    public Text CreditText;
+    public AudioSource LvUPSound; // 레벨업 사운드
     
     void Start()
     {
@@ -34,6 +37,7 @@ public class Player : MonoBehaviour
         LevelUp();
 
         LevelUI.text = "LV : " + Level;
+        CreditText.text = "" + Credit;
 
         if (Enemy != null)
         {
@@ -56,6 +60,7 @@ public class Player : MonoBehaviour
         CurrentHP = HP;
         EXP = 100f; // 0레벨 플레이어 최대 경험치
         CurrentEXP = 0;
+        Credit = 0;
     }
 
     public void CheckPlayerHP()
@@ -85,6 +90,7 @@ public class Player : MonoBehaviour
             Level++;
             AttackPower += 3f;
             EXP += 100f;
+            LvUPSound.Play();
         }
     }
 }
