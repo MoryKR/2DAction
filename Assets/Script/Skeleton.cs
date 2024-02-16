@@ -11,9 +11,8 @@ public class Skeleton : MonoBehaviour
     public float SkeletonHP; // 스켈레톤 총 체력
     public float SkeletonAttackPower; // 스켈레톤 공격력
     public float StageLV;
-    public float StageMonster;
+    public float StageMonster;// 스테이지 클리어를 위한 목표 몬스터
 
-    public Text SkeletonName;
     public Slider SkeletonHPUI;
     public Text StageNum;
     public Text MonCount;
@@ -36,18 +35,30 @@ public class Skeleton : MonoBehaviour
 
         if(SkeletonCurrentHP <= 0)
         {
-            Anim.SetInteger("AnimState", 3);
             Player.GetComponent<Player>().Enemy = null;
-            
+            Anim.SetInteger("AnimDead", 1);
         }
 
-        if(StageMonster > 10)
+        if (StageMonster > 10)
         {
             StageClear();
         }
 
+        if (Player != null)
+        {
+            if (Player.GetComponent<Player>().CurrentHP > 0)
+            {
+                Anim.SetInteger("AnimState", 1);
+            }
+        }
+        else if (Player == null)
+        {
+            Anim.SetInteger("AnimState", 2);
+        }
+
 
     }
+
 
     public void StageClear()
     {
@@ -62,9 +73,8 @@ public class Skeleton : MonoBehaviour
         StageMonster = 1f;
         StageLV = 1;
     }
-    public void SkeletonSet(/*float amount*/)
+    public void SkeletonSet()
     {
-        SkeletonName.text = MonsterName;
         SkeletonHP = 50f;
         SkeletonCurrentHP = SkeletonHP;
     }
@@ -75,13 +85,24 @@ public class Skeleton : MonoBehaviour
             SkeletonHPUI.value = SkeletonCurrentHP / SkeletonHP * 100f;
     }
 
+    public void AttackPlayer()
+    {
+        float damage;
+        damage = SkeletonAttackPower - Player.GetComponent<Player>().DefencePower;
+        if(damage <= 0) // 받는 데미지가 음수거나 0이면 데미지 1로 고정
+        {
+            damage = 1;
+        }
+        Player.GetComponent<Player>().CurrentHP -= damage;
+    }
+
+  
     public void Death()
     {
-        SkeletonName.gameObject.SetActive(false);
         SkeletonHPUI.gameObject.SetActive(false);
         Player.GetComponent<Player>().CurrentEXP += 20;
         Player.GetComponent<Player>().Credit += Random.Range(8, 12);
-        StageMonster++;
+        
     }
 
     public void DisalbeObject()
@@ -91,9 +112,9 @@ public class Skeleton : MonoBehaviour
     }
     public void Respawn()
     {
+        StageMonster++;
         this.gameObject.SetActive(true);
         SkeletonCurrentHP = SkeletonHP;
-        SkeletonName.gameObject.SetActive(true);
         SkeletonHPUI.gameObject.SetActive(true);
         Player.GetComponent<Player>().Enemy = this.gameObject;
     }

@@ -10,23 +10,51 @@ public class Player : MonoBehaviour
     public float CurrentHP; //현재 체력
     public float HP; //Max HP
     public float AttackPower; //공격력
+    public float DefencePower; // 방어력
     public int Level; // 플레이어 레벨
     public float CurrentEXP; //현재 경험치
     public float EXP; //Max Exp
     public float Credit; // 플레이어 자금
+    public float PosSetValue; // 포션세팅 퍼센트
+    public float Healing; // 포션 회복량
+    public float Postion1Count;
+    public float Postion2Count;
+    public float Postion3Count;
+    public float HPIncrease;// 훈련 HP 증가량
+    public float AttackIncrease;
+    public float DefenceIncrease;
+    public float HPPrice; // HP 훈련 가격
+    public float AttackPrice;
+    public float DefencePrice;
 
     public Text Name;
+    public Text HPText;
+    public Text AttackText;
+    public Text DefenceText;
     public Slider PlayerHPUI;
+    public Slider PostionSetting;
+    public Text PostionPersent;
+    public Text Pos1CountText;
+    public Text Pos2CountText;
+    public Text Pos3CountText;
     public Animator Anim;
     public Text LevelUI;
     public Slider PlayerEXPUI;
     public Text CreditText;
+    public Text HPIncreaseText;
+    public Text AttackIncreaseText;
+    public Text DefenceIncreaseText;
+    public Text HPPriceText;
+    public Text AttackPriceText;
+    public Text DefencePriceText;
     public AudioSource LvUPSound; // 레벨업 사운드
     
     void Start()
     {
         PlayerSet();
         Enemy = GameObject.FindGameObjectWithTag("enemy");
+        PostionSetting.onValueChanged.AddListener(PostionSet);
+        PostionPersent.text = PosSetValue + "%";
         
     }
 
@@ -35,9 +63,18 @@ public class Player : MonoBehaviour
         CheckPlayerEXP();
         CheckPlayerHP();
         LevelUp();
+        UpdateText();
 
-        LevelUI.text = "LV : " + Level;
-        CreditText.text = "" + Credit;
+        if (CurrentHP / HP *100 < PostionSetting.value)
+        {
+            UsePostion();
+        }
+
+        if (CurrentHP <= 0)
+        {
+            Enemy.GetComponent<Skeleton>().Player = null;
+            Anim.SetInteger("AnimDead", 1);
+        }
 
         if (Enemy != null)
         {
@@ -50,17 +87,49 @@ public class Player : MonoBehaviour
         {
             Anim.SetInteger("AnimState", 2);
         }
-        
+
+    }
+
+    public void UpdateText()
+    {
+        LevelUI.text = "LV : " + Level;
+        CreditText.text = "" + Credit;
+        HPText.text = "HP                  " + HP;
+        AttackText.text = "Attack              " + AttackPower;
+        DefenceText.text = "Defence             " + DefencePower;
+        Pos1CountText.text = "" + Postion1Count;
+        Pos2CountText.text = "" + Postion2Count;
+        Pos3CountText.text = "" + Postion3Count;
+        HPIncreaseText.text = "+" + HPIncrease;
+        AttackIncreaseText.text = "+" + AttackIncrease;
+        DefenceIncreaseText.text = "+" + DefenceIncrease;
+        HPPriceText.text = "" + HPPrice;
+        AttackPriceText.text = "" + AttackPrice;
+        DefencePriceText.text = "" + DefencePrice;
     }
 
     public void PlayerSet() // 초기 설정
     {
-        Name.text = PlayerName; 
+        Name.text = PlayerName;
         HP = 100f;
         CurrentHP = HP;
+        AttackPower = 10f;
+        DefencePower = 1f;
         EXP = 100f; // 0레벨 플레이어 최대 경험치
         CurrentEXP = 0;
         Credit = 0;
+        PosSetValue = 30;
+        Postion1Count = 5;
+        Postion2Count = 0;
+        Postion3Count = 0;
+        SelectPos1();
+        HPIncrease = 10f;
+        AttackIncrease = 1f;
+        DefenceIncrease = 1f;
+        HPPrice = 10f;
+        AttackPrice = 10f;
+        DefencePrice = 10f;
+
     }
 
     public void CheckPlayerHP()
@@ -93,4 +162,94 @@ public class Player : MonoBehaviour
             LvUPSound.Play();
         }
     }
+
+    public void PostionSet(float value)
+    {
+        PostionPersent.text = PostionSetting.value.ToString() + "%";
+    }
+
+    public void SelectPos1()
+    {
+        GameObject.Find("postion1").GetComponent<Image>().color = Color.yellow;
+        GameObject.Find("postion2").GetComponent<Image>().color = Color.green;
+        GameObject.Find("postion3").GetComponent<Image>().color = Color.green;
+        Healing = 20f;
+    }
+    public void SelectPos2()
+    {
+        GameObject.Find("postion1").GetComponent<Image>().color = Color.green;
+        GameObject.Find("postion2").GetComponent<Image>().color = Color.yellow;
+        GameObject.Find("postion3").GetComponent<Image>().color = Color.green;
+        Healing = 50f;
+    }
+    public void SelectPos3()
+    {
+        GameObject.Find("postion1").GetComponent<Image>().color = Color.green;
+        GameObject.Find("postion2").GetComponent<Image>().color = Color.green;
+        GameObject.Find("postion3").GetComponent<Image>().color = Color.yellow;
+        Healing = 100f;
+    }
+
+    public void UsePostion()
+    {
+        
+        if (Healing == 20f)
+        {
+            if (Postion1Count > 0)
+            {
+                CurrentHP += Healing;
+                Postion1Count--;
+            }
+        }
+        else if (Healing == 50f)
+        {
+            if (Postion2Count > 0)
+            {
+                CurrentHP += Healing;
+                Postion2Count--;
+            }
+        }
+        else if (Healing == 100f)
+        {
+            if (Postion3Count > 0)
+            {
+                CurrentHP += Healing;
+                Postion3Count--;
+            }
+        }
+            
+    }
+
+    public void HPTraining()
+    {
+        if(Credit >= HPPrice)
+        {
+            HP += HPIncrease;
+            CurrentHP += HPIncrease;
+            Credit -= HPPrice;
+            HPIncrease += 10f;
+            HPPrice += 2f;
+        }
+    }
+    public void AttackTraining()
+    {
+        if (Credit >= AttackPrice)
+        {
+            AttackPower += AttackIncrease;
+            Credit -= AttackPrice;
+            AttackIncrease += 1f;
+            AttackPrice += 2f;
+        }
+    }
+    public void DefenceTraining()
+    {
+        if (Credit >= DefencePrice)
+        {
+            DefencePower += DefenceIncrease;
+            Credit -= DefencePrice;
+            DefenceIncrease += 1f;
+            DefencePrice += 2f;
+        }
+    }
+
 }
