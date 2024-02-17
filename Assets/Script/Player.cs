@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     public float Credit; // 플레이어 자금
     public float PosSetValue; // 포션세팅 퍼센트
     public float Healing; // 포션 회복량
-    public float Postion1Count;
+    public float Postion1Count;// 보유 포션 개수
     public float Postion2Count;
     public float Postion3Count;
     public float HPIncrease;// 훈련 HP 증가량
@@ -26,6 +26,11 @@ public class Player : MonoBehaviour
     public float HPPrice; // HP 훈련 가격
     public float AttackPrice;
     public float DefencePrice;
+    public float Pos1Price; // 포션 가격
+    public float Pos2Price;
+    public float Pos3Price;
+    public float Buff1Price; // 버프 가격
+
 
     public Text Name;
     public Text HPText;
@@ -47,15 +52,23 @@ public class Player : MonoBehaviour
     public Text HPPriceText;
     public Text AttackPriceText;
     public Text DefencePriceText;
+    public Text Pos1PriceText;
+    public Text Pos2PriceText;
+    public Text Pos3PriceText;
     public AudioSource LvUPSound; // 레벨업 사운드
+    public AudioSource AttackSound; // 공격 사운드
+    
     
     void Start()
     {
         PlayerSet();
+        
         Enemy = GameObject.FindGameObjectWithTag("enemy");
         PostionSetting.onValueChanged.AddListener(PostionSet);
         PostionPersent.text = PosSetValue + "%";
-        
+        Pos1PriceText.text = "" + Pos1Price;
+        Pos2PriceText.text = "" + Pos2Price;
+        Pos3PriceText.text = "" + Pos3Price;
     }
 
     void Update()
@@ -72,6 +85,7 @@ public class Player : MonoBehaviour
 
         if (CurrentHP <= 0)
         {
+            CurrentHP = 0;
             Enemy.GetComponent<Skeleton>().Player = null;
             Anim.SetInteger("AnimDead", 1);
         }
@@ -94,7 +108,7 @@ public class Player : MonoBehaviour
     {
         LevelUI.text = "LV : " + Level;
         CreditText.text = "" + Credit;
-        HPText.text = "HP                  " + HP;
+        HPText.text = "HP             " + CurrentHP + "/" + HP;
         AttackText.text = "Attack              " + AttackPower;
         DefenceText.text = "Defence             " + DefencePower;
         Pos1CountText.text = "" + Postion1Count;
@@ -129,7 +143,9 @@ public class Player : MonoBehaviour
         HPPrice = 10f;
         AttackPrice = 10f;
         DefencePrice = 10f;
-
+        Pos1Price = 5f;
+        Pos2Price = 10f;
+        Pos3Price = 15f;
     }
 
     public void CheckPlayerHP()
@@ -149,6 +165,7 @@ public class Player : MonoBehaviour
     public void AttackEnemy()
     {
         Enemy.GetComponent<Skeleton>().SkeletonCurrentHP -= AttackPower;
+        AttackSound.Play();
     }
 
     public void LevelUp()
@@ -251,5 +268,29 @@ public class Player : MonoBehaviour
             DefencePrice += 2f;
         }
     }
-
+    
+    public void BuyPostion1()
+    {
+        if(Credit >= Pos1Price)
+        {
+            Credit -= Pos1Price;
+            Postion1Count++;
+        }
+    }
+    public void BuyPostion2()
+    {
+        if (Credit >= Pos2Price)
+        {
+            Credit -= Pos2Price;
+            Postion2Count++;
+        }
+    }
+    public void BuyPostion3()
+    {
+        if (Credit >= Pos3Price)
+        {
+            Credit -= Pos3Price;
+            Postion3Count++;
+        }
+    }
 }

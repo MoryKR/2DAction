@@ -11,12 +11,15 @@ public class Skeleton : MonoBehaviour
     public float SkeletonHP; // 스켈레톤 총 체력
     public float SkeletonAttackPower; // 스켈레톤 공격력
     public float StageLV;
-    public float StageMonster;// 스테이지 클리어를 위한 목표 몬스터
+    public float StageGoal; //스테이지 클리어를 위한 목표 몬스터
+    public float StageMonster;// 스테이지 클리어를 위한 현재 몬스터
+    public float RespawnTime; // 리스폰 쿨타임
+
 
     public Slider SkeletonHPUI;
     public Text StageNum;
     public Text MonCount;
-
+    public AudioSource StageUpSound;
     public Animator Anim;
 
     private void Start()
@@ -31,7 +34,7 @@ public class Skeleton : MonoBehaviour
         CheckSkeletonHP();
 
         StageNum.text = "Stage " + StageLV;
-        MonCount.text = StageMonster + "/ 10";
+        MonCount.text = StageMonster + "/" + StageGoal;
 
         if(SkeletonCurrentHP <= 0)
         {
@@ -39,7 +42,7 @@ public class Skeleton : MonoBehaviour
             Anim.SetInteger("AnimDead", 1);
         }
 
-        if (StageMonster > 10)
+        if (StageMonster > StageGoal)
         {
             StageClear();
         }
@@ -63,20 +66,23 @@ public class Skeleton : MonoBehaviour
     public void StageClear()
     {
         StageLV++;
-        SkeletonHP += 20f;
-        SkeletonAttackPower += 0f;
+        SkeletonHP += 50f;
+        SkeletonAttackPower += 10f;
         StageMonster = 0;
+        StageUpSound.Play();
     }
 
     public void SetStage()
     {
         StageMonster = 1f;
         StageLV = 1;
+        StageGoal = 5;
     }
     public void SkeletonSet()
     {
         SkeletonHP = 50f;
         SkeletonCurrentHP = SkeletonHP;
+        RespawnTime = 2f;
     }
 
     public void CheckSkeletonHP()
@@ -108,7 +114,7 @@ public class Skeleton : MonoBehaviour
     public void DisalbeObject()
     {
         this.gameObject.SetActive(false);
-        Invoke("Respawn", 2); //2초 후 오브젝트 부활
+        Invoke("Respawn", RespawnTime); //2초 후 오브젝트 부활
     }
     public void Respawn()
     {
