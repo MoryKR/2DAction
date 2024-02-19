@@ -4784,7 +4784,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -243.6}
+  m_AnchoredPosition: {x: 0, y: -243.59998}
   m_SizeDelta: {x: 0, y: -191.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &844337480
@@ -6560,7 +6560,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -243.6}
+  m_AnchoredPosition: {x: 0, y: -243.59998}
   m_SizeDelta: {x: 0, y: -191.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1255217000
@@ -6870,7 +6870,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -243.6}
+  m_AnchoredPosition: {x: 0, y: -243.59998}
   m_SizeDelta: {x: 0, y: -191.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1352842480
@@ -7047,31 +7047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e721bf409d4729f4d8c300c5a9d31e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Enemy: {fileID: 0}
-  PlayerName: Mory
-  CurrentHP: 100
-  HP: 100
-  AttackPower: 10
-  DefencePower: 1
-  Level: 0
-  CurrentEXP: 0
-  EXP: 0
-  Credit: 0
-  PosSetValue: 0
-  Healing: 0
-  Postion1Count: 0
-  Postion2Count: 0
-  Postion3Count: 0
-  HPIncrease: 0
-  AttackIncrease: 0
-  DefenceIncrease: 0
-  HPPrice: 0
-  AttackPrice: 0
-  DefencePrice: 0
-  Pos1Price: 0
-  Pos2Price: 0
-  Pos3Price: 0
-  Buff1Price: 0
+  Enemy: {fileID: 1930189692}
   Name: {fileID: 875455466}
   HPText: {fileID: 1608291556}
   AttackText: {fileID: 191198507}
@@ -10119,12 +10095,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ef8fb853b8ee64987e029e29f59fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
+  Player: {fileID: 1417287226}
   MonsterName: Skeleton
   SkeletonCurrentHP: 50
   SkeletonHP: 50
   SkeletonAttackPower: 3
   StageLV: 0
+  StageGoal: 0
   StageMonster: 0
   RespawnTime: 0
   SkeletonHPUI: {fileID: 70634999}

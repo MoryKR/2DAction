@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
+using System.IO;
 public class Skeleton : MonoBehaviour
 {
     public GameObject Player;
@@ -49,7 +50,7 @@ public class Skeleton : MonoBehaviour
 
         if (Player != null)
         {
-            if (Player.GetComponent<Player>().CurrentHP > 0)
+            if (Player.GetComponent<Player>().nowPlayer.CurrentHP > 0)
             {
                 Anim.SetInteger("AnimState", 1);
             }
@@ -94,20 +95,20 @@ public class Skeleton : MonoBehaviour
     public void AttackPlayer()
     {
         float damage;
-        damage = SkeletonAttackPower - Player.GetComponent<Player>().DefencePower;
+        damage = SkeletonAttackPower - Player.GetComponent<Player>().nowPlayer.DefencePower;
         if(damage <= 0) // 받는 데미지가 음수거나 0이면 데미지 1로 고정
         {
             damage = 1;
         }
-        Player.GetComponent<Player>().CurrentHP -= damage;
+        Player.GetComponent<Player>().nowPlayer.CurrentHP -= damage;
     }
 
   
     public void Death()
     {
         SkeletonHPUI.gameObject.SetActive(false);
-        Player.GetComponent<Player>().CurrentEXP += 20;
-        Player.GetComponent<Player>().Credit += Random.Range(8, 12);
+        Player.GetComponent<Player>().nowPlayer.CurrentEXP += 20;
+        Player.GetComponent<Player>().nowPlayer.Credit += Random.Range(8, 12);
         
     }
 
